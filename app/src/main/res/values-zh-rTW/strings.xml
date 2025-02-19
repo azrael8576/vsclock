@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VsClock</string>
+    <string name="not_connected">⚠️ 您沒有連接到網路</string>
+
+</resources>
