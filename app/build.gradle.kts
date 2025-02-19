@@ -69,6 +69,8 @@ android {
 
 
 dependencies {
+    implementation(projects.feature.times)
+
     implementation(projects.core.common)
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
