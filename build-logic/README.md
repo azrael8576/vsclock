@@ -29,10 +29,10 @@ setup.
 
 Current list of convention plugins:
 
-- [`vsc.android.application`](convention/src/main/kotlin/AndroidApplicationConventionPlugin.kt),
-  [`vsc.android.library`](convention/src/main/kotlin/AndroidLibraryConventionPlugin.kt),
-  [`vsc.android.test`](convention/src/main/kotlin/AndroidTestConventionPlugin.kt):
+- [`vsclock.android.application`](convention/src/main/kotlin/AndroidApplicationConventionPlugin.kt),
+  [`vsclock.android.library`](convention/src/main/kotlin/AndroidLibraryConventionPlugin.kt),
+  [`vsclock.android.test`](convention/src/main/kotlin/AndroidTestConventionPlugin.kt):
   Configures common Android and Kotlin options.
-- [`vsc.android.application.compose`](convention/src/main/kotlin/AndroidApplicationComposeConventionPlugin.kt),
-  [`vsc.android.library.compose`](convention/src/main/kotlin/AndroidLibraryComposeConventionPlugin.kt):
+- [`vsclock.android.application.compose`](convention/src/main/kotlin/AndroidApplicationComposeConventionPlugin.kt),
+  [`vsclock.android.library.compose`](convention/src/main/kotlin/AndroidLibraryComposeConventionPlugin.kt):
   Configures Jetpack Compose options

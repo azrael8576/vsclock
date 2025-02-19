@@ -37,47 +37,47 @@ tasks {
 gradlePlugin {
     plugins {
         register("androidApplicationCompose") {
-            id = "vsc.android.application.compose"
+            id = "vsclock.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidApplication") {
-            id = "vsc.android.application"
+            id = "vsclock.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "vsc.android.library.compose"
+            id = "vsclock.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
         register("androidLibrary") {
-            id = "vsc.android.library"
+            id = "vsclock.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidFeature") {
-            id = "vsc.android.feature"
+            id = "vsclock.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
         register("androidTest") {
-            id = "vsc.android.test"
+            id = "vsclock.android.test"
             implementationClass = "AndroidTestConventionPlugin"
         }
         register("androidHilt") {
-            id = "vsc.android.hilt"
+            id = "vsclock.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
         register("androidFirebase") {
-            id = "vsc.android.application.firebase"
+            id = "vsclock.android.application.firebase"
             implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
         register("androidFlavors") {
-            id = "vsc.android.application.flavors"
+            id = "vsclock.android.application.flavors"
             implementationClass = "AndroidApplicationFlavorsConventionPlugin"
         }
         register("androidLint") {
-            id = "vsc.android.lint"
+            id = "vsclock.android.lint"
             implementationClass = "AndroidLintConventionPlugin"
         }
         register("jvmLibrary") {
-            id = "vsc.jvm.library"
+            id = "vsclock.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
         }
     }

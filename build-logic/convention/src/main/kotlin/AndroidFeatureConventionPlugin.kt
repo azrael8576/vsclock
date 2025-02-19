@@ -10,8 +10,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply {
-                apply("vsc.android.library")
-                apply("vsc.android.hilt")
+                apply("vsclock.android.library")
+                apply("vsclock.android.hilt")
                 apply("androidx.navigation.safeargs.kotlin")
             }
             extensions.configure<LibraryExtension> {

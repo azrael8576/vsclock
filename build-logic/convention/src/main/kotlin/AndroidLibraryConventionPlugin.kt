@@ -18,7 +18,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
-                apply("vsc.android.lint")
+                apply("vsclock.android.lint")
             }
 
             extensions.configure<LibraryExtension> {

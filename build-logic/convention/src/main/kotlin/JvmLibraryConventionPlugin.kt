@@ -7,7 +7,7 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.jvm")
-                apply("vsc.android.lint")
+                apply("vsclock.android.lint")
             }
             configureKotlinJvm()
         }

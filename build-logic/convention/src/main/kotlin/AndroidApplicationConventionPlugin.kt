@@ -13,7 +13,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("vsc.android.lint")
+                apply("vsclock.android.lint")
             }
 
             extensions.configure<ApplicationExtension> {

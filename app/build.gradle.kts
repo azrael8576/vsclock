@@ -1,10 +1,10 @@
 import com.wei.vsclock.VscBuildType
 
 plugins {
-    alias(libs.plugins.vsc.android.application)
-    alias(libs.plugins.vsc.android.application.compose)
-    alias(libs.plugins.vsc.android.application.flavors)
-    alias(libs.plugins.vsc.android.hilt)
+    alias(libs.plugins.vsclock.android.application)
+    alias(libs.plugins.vsclock.android.application.compose)
+    alias(libs.plugins.vsclock.android.application.flavors)
+    alias(libs.plugins.vsclock.android.hilt)
     alias(libs.plugins.roborazzi)
 }
 

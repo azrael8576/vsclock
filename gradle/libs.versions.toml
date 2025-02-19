@@ -218,13 +218,13 @@ roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 
 
 # Plugins defined by this project
-vsc-android-application = { id = "vsc.android.application", version = "unspecified" }
-vsc-android-application-compose = { id = "vsc.android.application.compose", version = "unspecified" }
-vsc-android-application-firebase = { id = "vsc.android.application.firebase", version = "unspecified" }
-vsc-android-application-flavors = { id = "vsc.android.application.flavors", version = "unspecified" }
-vsc-android-feature = { id = "vsc.android.feature", version = "unspecified" }
-vsc-android-hilt = { id = "vsc.android.hilt", version = "unspecified" }
-vsc-android-library = { id = "vsc.android.library", version = "unspecified" }
-vsc-android-library-compose = { id = "vsc.android.library.compose", version = "unspecified" }
-vsc-android-test = { id = "vsc.android.test", version = "unspecified" }
-vsc-jvm-library = { id = "vsc.jvm.library", version = "unspecified" }
+vsclock-android-application = { id = "vsclock.android.application", version = "unspecified" }
+vsclock-android-application-compose = { id = "vsclock.android.application.compose", version = "unspecified" }
+vsclock-android-application-firebase = { id = "vsclock.android.application.firebase", version = "unspecified" }
+vsclock-android-application-flavors = { id = "vsclock.android.application.flavors", version = "unspecified" }
+vsclock-android-feature = { id = "vsclock.android.feature", version = "unspecified" }
+vsclock-android-hilt = { id = "vsclock.android.hilt", version = "unspecified" }
+vsclock-android-library = { id = "vsclock.android.library", version = "unspecified" }
+vsclock-android-library-compose = { id = "vsclock.android.library.compose", version = "unspecified" }
+vsclock-android-test = { id = "vsclock.android.test", version = "unspecified" }
+vsclock-jvm-library = { id = "vsclock.jvm.library", version = "unspecified" }
