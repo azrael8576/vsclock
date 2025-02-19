@@ -24,4 +24,13 @@ rootProject.name = "vsclock"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
- 
+
+include(":core:designsystem")
+include(":core:testing")
+include(":core:network")
+include(":core:data")
+include(":core:common")
+include(":core:model")
+include(":core:domain")
+
+include(":ui-test-hilt-manifest")
