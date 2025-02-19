@@ -33,4 +33,6 @@ include(":core:common")
 include(":core:model")
 include(":core:domain")
 
+include(":feature:times")
+
 include(":ui-test-hilt-manifest")

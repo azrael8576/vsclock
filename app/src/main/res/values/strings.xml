@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">VsClock</string>
     <string name="not_connected">⚠️ You aren’t connected to the internet</string>
+    <string name="times">Times</string>
+    <string name="setting">Setting</string>
+
+    <!-- Test tag -->
+    <string name="tag_vsclock_bottom_bar" translatable="false">VsclockBottomBar</string>
+    <string name="tag_vsclock_nav_rail" translatable="false">VsclockNavRail</string>
+    <string name="tag_vsclock_nav_drawer" translatable="false">VsclockNavDrawer</string>
 
 </resources>
