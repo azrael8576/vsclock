@@ -18,7 +18,7 @@ import javax.inject.Singleton
  * Retrofit API declaration for VsClock Network API
  */
 interface RetrofitVsclockNetworkApi {
-    @GET("health/check")
+    @GET("api/health/check")
     suspend fun checkHealth(): retrofit2.Response<Unit>
 
     /**
@@ -29,9 +29,6 @@ interface RetrofitVsclockNetworkApi {
         @Query("timeZone") timeZone: String,
     ): NetworkCurrentTime
 
-    /**
-     * ${BACKEND_URL}/api/timezone/availabletimezones
-     */
     @GET("api/timezone/availabletimezones")
     suspend fun getAvailableTimeZones(): List<String>
 }

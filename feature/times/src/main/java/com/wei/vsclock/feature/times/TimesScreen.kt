@@ -11,12 +11,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
@@ -54,12 +57,16 @@ import com.wei.vsclock.core.designsystem.theme.VsclockTheme
 @Composable
 internal fun TimesRoute(
     navController: NavController,
+    viewModel: TimesViewModel = hiltViewModel(),
 ) {
-    TimesScreen()
+    val uiStates: TimesViewState by viewModel.states.collectAsStateWithLifecycle()
+
+    TimesScreen(uiStates = uiStates)
 }
 
 @Composable
 internal fun TimesScreen(
+    uiStates: TimesViewState,
     withTopSpacer: Boolean = true,
     withBottomSpacer: Boolean = true,
     isPreview: Boolean = false,
@@ -94,6 +101,17 @@ internal fun TimesScreen(
                     modifier = Modifier
                         .semantics { contentDescription = "" },
                 )
+
+                val apiHealth = uiStates.apiHealthUiState
+                if (apiHealth is ApiHealthUiState.Success) {
+                    val isHealth = apiHealth.isHealth
+
+                    Text(
+                        text = "api health: $isHealth",
+                        color = if (isHealth) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
             }
 
@@ -109,6 +127,7 @@ internal fun TimesScreen(
 fun HomeScreenPreview() {
     VsclockTheme {
         TimesScreen(
+            uiStates = TimesViewState(),
             isPreview = true,
         )
     }

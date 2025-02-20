@@ -17,4 +17,7 @@ dependencies {
     api(projects.core.common)
     api(projects.core.network)
     api(projects.core.model)
+
+    // Retrofit2
+    implementation(libs.retrofit.core)
 }
