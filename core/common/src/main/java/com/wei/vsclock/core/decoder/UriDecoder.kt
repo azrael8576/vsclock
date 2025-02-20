@@ -1,7 +1,6 @@
 package com.wei.vsclock.core.decoder
 
 import android.net.Uri
-import com.wei.vsclock.core.decoder.StringDecoder
 import javax.inject.Inject
 
 /**
