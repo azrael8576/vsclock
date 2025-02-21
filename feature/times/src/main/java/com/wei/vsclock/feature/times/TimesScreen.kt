@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.wei.vsclock.core.AppLocale
 import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
@@ -58,15 +60,20 @@ import com.wei.vsclock.core.designsystem.theme.VsclockTheme
 internal fun TimesRoute(
     navController: NavController,
     viewModel: TimesViewModel = hiltViewModel(),
+    updateAppLocale: (AppLocale) -> Unit,
 ) {
     val uiStates: TimesViewState by viewModel.states.collectAsStateWithLifecycle()
 
-    TimesScreen(uiStates = uiStates)
+    TimesScreen(
+        uiStates = uiStates,
+        updateAppLocale = updateAppLocale,
+    )
 }
 
 @Composable
 internal fun TimesScreen(
     uiStates: TimesViewState,
+    updateAppLocale: (AppLocale) -> Unit,
     withTopSpacer: Boolean = true,
     withBottomSpacer: Boolean = true,
     isPreview: Boolean = false,
@@ -93,6 +100,16 @@ internal fun TimesScreen(
             }
 
             Column {
+                TextButton(
+                    onClick = { updateAppLocale(AppLocale.EN) },
+                ) {
+                    Text("en")
+                }
+                TextButton(
+                    onClick = { updateAppLocale(AppLocale.ZH_HANT_TW) },
+                ) {
+                    Text("zh-rTW")
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "Screen not available \uD83D\uDE48",
@@ -128,6 +145,7 @@ fun HomeScreenPreview() {
     VsclockTheme {
         TimesScreen(
             uiStates = TimesViewState(),
+            updateAppLocale = {},
             isPreview = true,
         )
     }
