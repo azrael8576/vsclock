@@ -16,6 +16,7 @@ data class TimesViewState(
     val refreshRate: RefreshRate = RefreshRate.MIN_1,
     val timesLoadingState: TimesLoadingState = TimesLoadingState.Idle,
     val timesUiStateList: List<TimesUiState> = emptyList(),
+    val lastRefreshTime: Long? = null,
 ) : State
 
 sealed interface HealthLoadingState {
