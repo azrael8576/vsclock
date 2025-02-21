@@ -17,6 +17,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtimeCompose)
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
 
     testImplementation(projects.core.testing)
     // For flow test

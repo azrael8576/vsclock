@@ -1,9 +1,12 @@
 package com.wei.vsclock.core.result
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.retryWhen
+import timber.log.Timber
 
 /**
  * DataSourceResult 是一個封裝數據源結果的密封接口，它可能是成功(Success)、錯誤(Error)或正在加載(Loading)的狀態。
@@ -30,4 +33,30 @@ fun <T> Flow<T>.asDataSourceResult(): Flow<DataSourceResult<T>> {
         }
         .onStart { emit(DataSourceResult.Loading) }
         .catch { emit(DataSourceResult.Error(it)) }
+}
+
+fun <T> Flow<T>.asDataSourceResultWithRetry(
+    maxRetries: Long = 3,
+    traceTag: String,
+): Flow<DataSourceResult<T>> {
+    return this
+        .map<T, DataSourceResult<T>> {
+            DataSourceResult.Success(it)
+        }
+        .onStart {
+            emit(DataSourceResult.Loading)
+        }
+        .retryWhen { _, attempt ->
+            // cause 是拋出的異常, attempt 是第幾次重試(從0開始)
+            if (attempt < maxRetries) {
+                Timber.e("$traceTag Retrying API request due to timeout... (attempt ${attempt + 1})")
+                delay(1000L * (attempt + 1)) // 指數回退或固定延遲
+                true // 返回 true 代表要繼續重試
+            } else {
+                false // 返回 false 不再重試, 交給後續 catch
+            }
+        }
+        .catch { e ->
+            emit(DataSourceResult.Error(e))
+        }
 }
