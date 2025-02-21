@@ -1,6 +1,5 @@
 package com.wei.vsclock.ui
 
-import android.app.LocaleManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -36,8 +35,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import timber.log.Timber
-
 
 @Composable
 fun rememberVsclockAppState(
