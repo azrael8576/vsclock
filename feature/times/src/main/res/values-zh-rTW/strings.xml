@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_times_language">語言</string>
+    <string name="feature_times_choose_your_language">選擇你的語言</string>
+    <string name="feature_times_ok">同意</string>
+
+</resources>

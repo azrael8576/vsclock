@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_times_language">Language</string>
+    <string name="feature_times_choose_your_language">choose your language</string>
+    <string name="feature_times_ok">OK</string>
+
+</resources>

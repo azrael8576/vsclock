@@ -4,28 +4,35 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.wei.vsclock.core.AppLocale
 import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
+import com.wei.vsclock.core.designsystem.theme.SPACING_LARGE
+import com.wei.vsclock.core.designsystem.theme.SPACING_SMALL
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
+import com.wei.vsclock.feature.times.ui.SwitchLanguageDialog
 
 /**
  *
@@ -60,20 +67,25 @@ import com.wei.vsclock.core.designsystem.theme.VsclockTheme
 internal fun TimesRoute(
     navController: NavController,
     viewModel: TimesViewModel = hiltViewModel(),
-    updateAppLocale: (AppLocale) -> Unit,
 ) {
     val uiStates: TimesViewState by viewModel.states.collectAsStateWithLifecycle()
 
     TimesScreen(
         uiStates = uiStates,
-        updateAppLocale = updateAppLocale,
+        onSwitchLanguage = { appLocale ->
+            viewModel.dispatch(
+                TimesViewAction.SwitchLanguage(
+                    appLocale,
+                ),
+            )
+        },
     )
 }
 
 @Composable
 internal fun TimesScreen(
     uiStates: TimesViewState,
-    updateAppLocale: (AppLocale) -> Unit,
+    onSwitchLanguage: (AppLocale) -> Unit,
     withTopSpacer: Boolean = true,
     withBottomSpacer: Boolean = true,
     isPreview: Boolean = false,
@@ -88,28 +100,41 @@ internal fun TimesScreen(
         )
     }
 
+    val showSwitchLanguagePopup = remember { mutableStateOf(false) }
+
+    if (showSwitchLanguagePopup.value) {
+        SwitchLanguageDialog(
+            onDismissRequest = {
+                showSwitchLanguagePopup.value = false
+            },
+            currentLocale = uiStates.currentLanguage,
+            onConfirmation = { selectedLocale ->
+                showSwitchLanguagePopup.value = false
+                if (selectedLocale == uiStates.currentLanguage) return@SwitchLanguageDialog
+                onSwitchLanguage(selectedLocale)
+            },
+        )
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+        Column {
             if (withTopSpacer) {
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
             }
 
-            Column {
-                TextButton(
-                    onClick = { updateAppLocale(AppLocale.EN) },
-                ) {
-                    Text("en")
-                }
-                TextButton(
-                    onClick = { updateAppLocale(AppLocale.ZH_HANT_TW) },
-                ) {
-                    Text("zh-rTW")
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(SPACING_LARGE.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                SwitchLanguageButton(
+                    language = uiStates.currentLanguage,
+                    onClick = { showSwitchLanguagePopup.value = true },
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "Screen not available \uD83D\uDE48",
@@ -139,13 +164,32 @@ internal fun TimesScreen(
     }
 }
 
+@Composable
+internal fun SwitchLanguageButton(
+    language: AppLocale,
+    onClick: () -> Unit,
+) {
+    val text = stringResource(R.string.feature_times_language) + ": ${language.text}"
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .padding(top = SPACING_SMALL.dp)
+            .semantics { contentDescription = text },
+    ) {
+        Text(
+            text = text,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+        )
+    }
+}
+
 @ThemePreviews
 @Composable
-fun HomeScreenPreview() {
+fun TimesScreenPreview() {
     VsclockTheme {
         TimesScreen(
             uiStates = TimesViewState(),
-            updateAppLocale = {},
+            onSwitchLanguage = {},
             isPreview = true,
         )
     }
