@@ -1,5 +1,7 @@
 package com.wei.vsclock.ui
 
+import android.app.LocaleManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -8,6 +10,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -17,6 +20,7 @@ import androidx.navigation.navOptions
 import androidx.tracing.trace
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.wei.vsclock.core.AppLocale
 import com.wei.vsclock.core.data.utils.NetworkMonitor
 import com.wei.vsclock.core.designsystem.ui.DeviceOrientation
 import com.wei.vsclock.core.designsystem.ui.DevicePosture
@@ -32,6 +36,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
+
 
 @Composable
 fun rememberVsclockAppState(
@@ -161,6 +167,17 @@ class VsclockAppState(
         )
 
     val showFunctionalityNotAvailablePopup: MutableState<Boolean> = mutableStateOf(false)
+
+    /**
+     * 更新 App 語言設定
+     * @param appLocale
+     */
+    fun updateAppLocale(appLocale: AppLocale) {
+        val newLocales = LocaleListCompat.forLanguageTags(appLocale.code)
+
+        // 注意：該方法必須在 Activity.onCreate() 後呼叫
+        AppCompatDelegate.setApplicationLocales(newLocales)
+    }
 
     /**
      * Map of top level destinations to be used in the TopBar, BottomBar and NavRail. The key is the
