@@ -35,7 +35,6 @@ fun VsclockNavHost(
     ) {
         timesGraph(
             navController = navController,
-            updateAppLocale = { appLocale -> appState.updateAppLocale(appLocale) },
         )
     }
 }
