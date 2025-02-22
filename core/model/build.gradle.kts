@@ -12,4 +12,6 @@ android {
 dependencies {
     // For androidx.compose.runtime.Stable
     implementation(libs.androidx.compose.runtime)
+
+    implementation(libs.kotlinx.datetime)
 }
