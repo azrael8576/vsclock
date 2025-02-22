@@ -116,18 +116,24 @@ constructor(
      */
     private suspend fun fetchTimes(): List<TimesUiState> =
         coroutineScope {
-            fakeTimeZones.map { zone ->
+            val indexedTimeZones = fakeTimeZones.mapIndexed { index, zone -> index to zone }
+
+            val results = indexedTimeZones.map { (originalIndex, timeZone) ->
                 async {
-                    // 取出第一個非 Idle 的結果
-                    val result = timeRepository.getCurrentTime(zone)
+                    val result = timeRepository.getCurrentTime(timeZone)
                         .asDataSourceResultWithRetry(
                             maxRetries = 3,
-                            traceTag = "timeRepository.getCurrentTime: $zone",
+                            traceTag = "timeRepository.getCurrentTime: $timeZone",
                         )
                         .first { it !is DataSourceResult.Loading }
-                    result.toTimesUiState(zone = zone)
+
+                    val uiState = result.toTimesUiState(timeZone)
+                    originalIndex to uiState
                 }
             }.awaitAll()
+
+            results.sortedBy { (index, _) -> index }
+                .map { (_, uiState) -> uiState }
         }
 
     private fun DataSourceResult<CurrentTime>.toTimesUiState(zone: String): TimesUiState {
