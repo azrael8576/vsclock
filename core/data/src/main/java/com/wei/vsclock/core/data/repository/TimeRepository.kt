@@ -11,4 +11,15 @@ interface TimeRepository {
     ): Flow<CurrentTime>
 
     suspend fun getAvailableTimeZones(): Flow<List<String>>
+
+    suspend fun getCurrentTimes(): Flow<List<CurrentTime>>
+
+    suspend fun addTimeZone(timeZone: String)
+
+    suspend fun deleteTimeZones(timeZones: List<String>)
+
+    suspend fun updateTimeZone(
+        previousTimeZone: String,
+        updatedTimeZone: String,
+    )
 }

@@ -37,6 +37,11 @@ constructor(
 
     init {
         getAvailableTimezones()
+        viewModelScope.launch {
+            timeRepository.getCurrentTimes().collect {
+                updateState { copy(savedTimeZones = it.map { it.timeZone }) }
+            }
+        }
     }
 
     private fun getAvailableTimezones() {
@@ -100,16 +105,85 @@ constructor(
         }
     }
 
+    private fun onResetHeaderUiMode() {
+        switchHeaderUiMode(headerUiMode = HeaderUiMode.DEFAULT)
+    }
+
     private fun onClickAddTimeZone(timeZone: String) {
-        Timber.e("onClickAddTimeZone timeZone $timeZone")
+        if (states.value.savedTimeZones.contains(timeZone)) {
+            showSnackBar(
+                resId = R.string.feature_setting_error_time_zone_exists,
+                message = listOf(timeZone),
+            )
+            return
+        }
+        viewModelScope.launch {
+            timeRepository.addTimeZone(timeZone)
+        }
+    }
+
+    private fun onClickEditTimeZone(
+        previousTimeZone: String,
+        updatedTimeZone: String,
+    ) {
+        switchHeaderUiMode(HeaderUiMode.DEFAULT)
+        if (states.value.savedTimeZones.contains(updatedTimeZone)) {
+            showSnackBar(
+                resId = R.string.feature_setting_error_time_zone_exists,
+                message = listOf(updatedTimeZone),
+            )
+            return
+        }
+        viewModelScope.launch {
+            timeRepository.updateTimeZone(
+                previousTimeZone = previousTimeZone,
+                updatedTimeZone = updatedTimeZone,
+            )
+        }
     }
 
     private fun onClickEditButton() {
-        updateState { copy(headerUiMode = HeaderUiMode.EDIT) }
+        switchHeaderUiMode(headerUiMode = HeaderUiMode.EDIT)
     }
 
     private fun onClickDeleteButton() {
-        updateState { copy(headerUiMode = HeaderUiMode.DEFAULT) }
+        deleteTimeZones()
+        switchHeaderUiMode(headerUiMode = HeaderUiMode.DEFAULT)
+    }
+
+    private fun deleteTimeZones() {
+        viewModelScope.launch {
+            val selectedTimeZones = states.value.selectedTimeZones
+            timeRepository.deleteTimeZones(selectedTimeZones.toList())
+        }
+    }
+
+    /**
+     * 切換 Header 狀態時清空 CheckBox
+     *
+     * @param headerUiMode HeaderUiMode
+     */
+    private fun switchHeaderUiMode(headerUiMode: HeaderUiMode) {
+        updateState {
+            copy(
+                headerUiMode = headerUiMode,
+                selectedTimeZones = emptySet(),
+            )
+        }
+    }
+
+    private fun onSelectTimeZoneCheckBox(timeZone: String) {
+        // 轉換為可變集合
+        val newSelection = states.value.selectedTimeZones.toMutableSet()
+        newSelection.add(timeZone)
+        updateState { copy(selectedTimeZones = newSelection) }
+    }
+
+    private fun onDeselectTimeZoneCheckBox(timeZone: String) {
+        // 轉換為可變集合
+        val newSelection = states.value.selectedTimeZones.toMutableSet()
+        newSelection.remove(timeZone)
+        updateState { copy(selectedTimeZones = newSelection) }
     }
 
     /**
@@ -123,13 +197,22 @@ constructor(
     override fun dispatch(action: SettingViewAction) {
         Timber.d("dispatch $action")
         when (action) {
+            SettingViewAction.ResetHeaderUiMode -> onResetHeaderUiMode()
             is SettingViewAction.ShowSnackBar -> showSnackBar(
                 resId = action.resId,
                 message = action.message,
             )
+
             is SettingViewAction.ClickAddTimeZone -> onClickAddTimeZone(action.timeZone)
+            is SettingViewAction.ClickEditTimeZone -> onClickEditTimeZone(
+                action.previousTimeZone,
+                action.updatedTimeZone,
+            )
+
             SettingViewAction.ClickEditButton -> onClickEditButton()
             SettingViewAction.ClickDeleteButton -> onClickDeleteButton()
+            is SettingViewAction.SelectTimeZoneCheckBox -> onSelectTimeZoneCheckBox(action.timeZone)
+            is SettingViewAction.DeselectTimeZoneCheckBox -> onDeselectTimeZoneCheckBox(action.timeZone)
         }
     }
 
