@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_setting_error_time_zone_exists">Time zone %1$s already exists.</string>
+    <string name="feature_setting_add">Add</string>
+    <string name="feature_setting_edit">Edit</string>
+    <string name="feature_setting_delete">Delete</string>
 </resources>

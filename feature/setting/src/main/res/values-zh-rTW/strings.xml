@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_setting_error_time_zone_exists">時區 %1$s 已經存在</string>
+    <string name="feature_setting_add">新增</string>
+    <string name="feature_setting_edit">編輯</string>
+    <string name="feature_setting_delete">刪除</string>
 </resources>

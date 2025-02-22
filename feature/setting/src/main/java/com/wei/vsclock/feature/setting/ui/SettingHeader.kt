@@ -11,12 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.wei.vsclock.core.designsystem.theme.SPACING_LARGE
 import com.wei.vsclock.core.designsystem.theme.SPACING_SMALL
 import com.wei.vsclock.feature.setting.HeaderUiMode
+import com.wei.vsclock.feature.setting.R
 import com.wei.vsclock.feature.setting.SettingViewState
 
 private data class ActionButtonData(val text: String, val onClick: () -> Unit)
@@ -35,30 +37,25 @@ internal fun SettingHeader(
         horizontalAlignment = Alignment.End,
     ) {
         HeaderRow(
-            getHeaderButtons(
-                headerUiMode = uiStates.headerUiMode,
-                onClickAddButton = onClickAddButton,
-                onClickEditButton = onClickEditButton,
-                onClickDeleteButton = onClickDeleteButton,
-            ),
-        )
-    }
-}
+            when (uiStates.headerUiMode) {
+                HeaderUiMode.DEFAULT -> listOf(
+                    ActionButtonData(
+                        stringResource(R.string.feature_setting_add),
+                        onClickAddButton,
+                    ),
+                    ActionButtonData(
+                        stringResource(R.string.feature_setting_edit),
+                        onClickEditButton,
+                    ),
+                )
 
-private fun getHeaderButtons(
-    headerUiMode: HeaderUiMode,
-    onClickAddButton: () -> Unit,
-    onClickEditButton: () -> Unit,
-    onClickDeleteButton: () -> Unit,
-): List<ActionButtonData> {
-    return when (headerUiMode) {
-        HeaderUiMode.DEFAULT -> listOf(
-            ActionButtonData("Add", onClickAddButton),
-            ActionButtonData("Edit", onClickEditButton),
-        )
-
-        HeaderUiMode.EDIT -> listOf(
-            ActionButtonData("Delete", onClickDeleteButton),
+                HeaderUiMode.EDIT -> listOf(
+                    ActionButtonData(
+                        stringResource(R.string.feature_setting_delete),
+                        onClickDeleteButton,
+                    ),
+                )
+            },
         )
     }
 }
