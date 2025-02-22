@@ -25,6 +25,8 @@ import com.wei.vsclock.core.designsystem.ui.VsclockNavigationType
 import com.wei.vsclock.core.designsystem.ui.currentDeviceOrientation
 import com.wei.vsclock.core.designsystem.ui.isBookPosture
 import com.wei.vsclock.core.designsystem.ui.isSeparating
+import com.wei.vsclock.feature.setting.navigation.SETTING_ROUTE
+import com.wei.vsclock.feature.setting.navigation.navigateToSetting
 import com.wei.vsclock.feature.times.navigation.TIMES_ROUTE
 import com.wei.vsclock.feature.times.navigation.navigateToTimes
 import com.wei.vsclock.navigation.TopLevelDestination
@@ -149,6 +151,7 @@ class VsclockAppState(
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             TIMES_ROUTE -> TopLevelDestination.TIMES
+            SETTING_ROUTE -> TopLevelDestination.SETTING
             else -> null
         }
 
@@ -193,6 +196,10 @@ class VsclockAppState(
 
             when (topLevelDestination) {
                 TopLevelDestination.TIMES -> navController.navigateToTimes(
+                    topLevelNavOptions,
+                )
+
+                TopLevelDestination.SETTING -> navController.navigateToSetting(
                     topLevelNavOptions,
                 )
 

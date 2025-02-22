@@ -1,4 +1,4 @@
-package com.wei.vsclock.feature.times
+package com.wei.vsclock.feature.setting
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,13 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.wei.vsclock.core.AppLocale
-import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
-import com.wei.vsclock.feature.times.ui.SwitchLanguageDialog
-import com.wei.vsclock.feature.times.ui.TimesGrid
-import com.wei.vsclock.feature.times.ui.TimesHeader
+import com.wei.vsclock.feature.setting.ui.AddTimeZoneDialog
+import com.wei.vsclock.feature.setting.ui.SettingHeader
 
 /**
  *
@@ -61,62 +57,55 @@ import com.wei.vsclock.feature.times.ui.TimesHeader
  *
  */
 @Composable
-internal fun TimesRoute(
+internal fun SettingRoute(
     navController: NavController,
-    viewModel: TimesViewModel = hiltViewModel(),
+    viewModel: SettingViewModel = hiltViewModel(),
 ) {
-    val uiStates: TimesViewState by viewModel.states.collectAsStateWithLifecycle()
+    val uiStates: SettingViewState by viewModel.states.collectAsStateWithLifecycle()
 
-    TimesScreen(
+    SettingScreen(
         uiStates = uiStates,
-        onSwitchLanguage = { appLocale ->
+        onShowSnackBar = { resId, message ->
             viewModel.dispatch(
-                TimesViewAction.SwitchLanguage(
-                    appLocale,
+                SettingViewAction.ShowSnackBar(
+                    resId = resId,
+                    message = listOf(message),
                 ),
             )
         },
-        onSelectRefreshRate = { refreshRate ->
+        onClickAddTimeZone = { timeZone ->
             viewModel.dispatch(
-                TimesViewAction.SelectRefreshRate(
-                    refreshRate,
+                SettingViewAction.ClickAddTimeZone(
+                    timeZone,
                 ),
             )
         },
+        onClickEditButton = { viewModel.dispatch(SettingViewAction.ClickEditButton) },
+        onClickDeleteButton = { viewModel.dispatch(SettingViewAction.ClickDeleteButton) },
     )
 }
 
 @Composable
-internal fun TimesScreen(
-    uiStates: TimesViewState,
-    onSwitchLanguage: (AppLocale) -> Unit,
-    onSelectRefreshRate: (RefreshRate) -> Unit,
+internal fun SettingScreen(
+    uiStates: SettingViewState,
+    onShowSnackBar: (Int?, String) -> Unit,
+    onClickAddTimeZone: (String) -> Unit,
+    onClickEditButton: () -> Unit,
+    onClickDeleteButton: () -> Unit,
     withTopSpacer: Boolean = true,
     withBottomSpacer: Boolean = true,
     isPreview: Boolean = false,
 ) {
-    val showPopup = remember { mutableStateOf(false) }
+    val showAddLanguageDialog = remember { mutableStateOf(false) }
 
-    if (showPopup.value) {
-        FunctionalityNotAvailablePopup(
-            onDismiss = {
-                showPopup.value = false
+    if (showAddLanguageDialog.value) {
+        AddTimeZoneDialog(
+            availableTimeZones = uiStates.availableTimeZones,
+            onClickTimeZone = { timeZone ->
+                onClickAddTimeZone(timeZone)
             },
-        )
-    }
-
-    val showSwitchLanguageDialog = remember { mutableStateOf(false) }
-
-    if (showSwitchLanguageDialog.value) {
-        SwitchLanguageDialog(
             onDismissRequest = {
-                showSwitchLanguageDialog.value = false
-            },
-            currentLocale = uiStates.currentLanguage,
-            onConfirmation = { selectedLocale ->
-                showSwitchLanguageDialog.value = false
-                if (selectedLocale == uiStates.currentLanguage) return@SwitchLanguageDialog
-                onSwitchLanguage(selectedLocale)
+                showAddLanguageDialog.value = false
             },
         )
     }
@@ -132,27 +121,27 @@ internal fun TimesScreen(
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
             }
 
-            TimesHeader(
+            SettingHeader(
                 uiStates = uiStates,
-                onClickSwitchLanguageButton = { showSwitchLanguageDialog.value = true },
-                onSelectRefreshRate = onSelectRefreshRate,
+                onClickAddButton = {
+                    if (uiStates.availableTimeZones.isEmpty()) {
+                        onShowSnackBar(null, "Failed to find any IANA time zones.")
+                        return@SettingHeader
+                    }
+                    showAddLanguageDialog.value = true
+                },
+                onClickEditButton = onClickEditButton,
+                onClickDeleteButton = onClickDeleteButton,
             )
 
-            if (uiStates.timesLoadingState is TimesLoadingState.Loading) {
+            if (uiStates.availableTimeZonesLoadingState is AvailableTimeZonesLoadingState.Loading) {
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(),
                 )
             } else {
                 // PlaceHolder for LinearProgressIndicator
                 Spacer(modifier = Modifier.height(4.dp))
-                // TODO Wei: 待 [TimesViewModel] 移除 fakeTimeZones 移除此 UI
-                Text(
-                    text = "The data is fake.",
-                    color = MaterialTheme.colorScheme.error,
-                )
             }
-
-            TimesGrid(uiStates.timesUiStateList)
 
             if (withBottomSpacer) {
                 Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
@@ -163,13 +152,34 @@ internal fun TimesScreen(
 
 @ThemePreviews
 @Composable
-fun TimesScreenPreview() {
+fun SettingScreenWithDefaultHeaderPreview() {
     VsclockTheme {
-        TimesScreen(
-            uiStates = TimesViewState(),
-            onSwitchLanguage = {},
-            onSelectRefreshRate = {},
+        SettingScreen(
+            uiStates = SettingViewState(
+                headerUiMode = HeaderUiMode.DEFAULT,
+            ),
             isPreview = true,
+            onShowSnackBar = { _, _ -> },
+            onClickAddTimeZone = { _ -> },
+            onClickEditButton = { },
+            onClickDeleteButton = { },
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+fun SettingScreenWithEditHeaderPreview() {
+    VsclockTheme {
+        SettingScreen(
+            uiStates = SettingViewState(
+                headerUiMode = HeaderUiMode.EDIT,
+            ),
+            isPreview = true,
+            onShowSnackBar = { _, _ -> },
+            onClickAddTimeZone = { _ -> },
+            onClickEditButton = { },
+            onClickDeleteButton = { },
         )
     }
 }
