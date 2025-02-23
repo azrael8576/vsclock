@@ -70,6 +70,7 @@ android {
 
 dependencies {
     implementation(projects.feature.times)
+    implementation(projects.feature.setting)
 
     implementation(projects.core.common)
     implementation(projects.core.data)

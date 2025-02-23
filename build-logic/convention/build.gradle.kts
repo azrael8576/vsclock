@@ -25,6 +25,7 @@ dependencies {
     compileOnly(libs.firebase.performance.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
+    compileOnly(libs.room.gradlePlugin)
 }
 
 tasks {
@@ -79,6 +80,10 @@ gradlePlugin {
         register("jvmLibrary") {
             id = "vsclock.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
+        }
+        register("androidRoom") {
+            id = libs.plugins.vsclock.android.room.get().pluginId
+            implementationClass = "AndroidRoomConventionPlugin"
         }
     }
 }

@@ -17,7 +17,9 @@ dependencies {
     api(projects.core.common)
     api(projects.core.network)
     api(projects.core.model)
+    api(projects.core.database)
 
     // Retrofit2
     implementation(libs.retrofit.core)
+    implementation(libs.kotlinx.datetime)
 }

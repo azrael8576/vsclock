@@ -2,8 +2,10 @@ package com.wei.vsclock.core.data.model
 
 import com.wei.vsclock.core.model.data.CurrentTime
 import com.wei.vsclock.core.network.model.NetworkCurrentTime
+import kotlinx.datetime.Instant
 
-fun NetworkCurrentTime.asExternalModel() =
+// TODO Wei: Use Entity::asExternalModel make sure SSOT!
+fun NetworkCurrentTime.asExternalModelTemp() =
     CurrentTime(
         year = this.year,
         month = this.month,
@@ -13,9 +15,9 @@ fun NetworkCurrentTime.asExternalModel() =
         seconds = this.seconds,
         milliseconds = this.milliseconds,
         dateTime = this.dateTime,
-        date = this.date,
-        time = this.time,
-        timeZone = this.timeZone,
+        date = this.date ?: "",
+        time = this.time ?: "",
+        timeZone = this.timeZone ?: "",
         dayOfWeek = this.dayOfWeek,
-        isDstActive = this.isDstActive,
+        createdAt = Instant.fromEpochMilliseconds(0L),
     )

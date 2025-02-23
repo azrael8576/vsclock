@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.wei.vsclock.feature.times"
+    namespace = "com.wei.vsclock.feature.setting"
 }
 
 dependencies {
