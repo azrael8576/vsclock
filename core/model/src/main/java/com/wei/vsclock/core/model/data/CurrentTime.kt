@@ -1,5 +1,8 @@
 package com.wei.vsclock.core.model.data
 
+/**
+ * External data layer representation of a VsClock time resource
+ */
 data class CurrentTime(
     val year: Int,
     val month: Int,

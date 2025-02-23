@@ -47,6 +47,7 @@ pagingCompose = "3.3.0-alpha02"
 media = "1.2.0"
 leakcanary = "2.14"
 appcompat = "1.7.0"
+room = "2.6.1"
 
 [libraries]
 
@@ -194,6 +195,11 @@ media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "medi
 # LeakCanary
 leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
 
+# Room
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
@@ -201,6 +207,7 @@ firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "fir
 firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -218,7 +225,7 @@ protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
-
+room = { id = "androidx.room", version.ref = "room" }
 
 # Plugins defined by this project
 vsclock-android-application = { id = "vsclock.android.application", version = "unspecified" }
@@ -231,3 +238,4 @@ vsclock-android-library = { id = "vsclock.android.library", version = "unspecifi
 vsclock-android-library-compose = { id = "vsclock.android.library.compose", version = "unspecified" }
 vsclock-android-test = { id = "vsclock.android.test", version = "unspecified" }
 vsclock-jvm-library = { id = "vsclock.jvm.library", version = "unspecified" }
+vsclock-android-room = { id = "vsclock.android.room", version = "unspecified" }
