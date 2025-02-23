@@ -60,7 +60,7 @@ interface CurrentTimeDao {
      * @return `CurrentTimeEntity?` 若存在則回傳該記錄，否則回傳 `null`。
      */
     @Query("SELECT * FROM current_times WHERE timeZone = :timeZone LIMIT 1")
-    suspend fun getCurrentTimeEntityByTimeZone(timeZone: String): CurrentTimeEntity?
+    fun getCurrentTimeEntityByTimeZone(timeZone: String): Flow<CurrentTimeEntity?>
 
     /**
      * 更新 `current_times` 資料表中指定的 `CurrentTimeEntity` 記錄。

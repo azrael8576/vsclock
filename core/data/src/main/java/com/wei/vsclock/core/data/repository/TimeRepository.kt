@@ -8,9 +8,13 @@ interface TimeRepository {
 
     suspend fun refreshCurrentTimes()
 
+    suspend fun refreshCurrentTime(timeZone: String)
+
     suspend fun getAvailableTimeZones(): Flow<List<String>>
 
     suspend fun getCurrentTimes(): Flow<List<CurrentTime>>
+
+    suspend fun getCurrentTime(timeZone: String): Flow<CurrentTime?>
 
     suspend fun addTimeZone(timeZone: String)
 

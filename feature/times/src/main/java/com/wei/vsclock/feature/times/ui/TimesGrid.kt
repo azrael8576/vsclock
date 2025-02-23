@@ -1,5 +1,6 @@
 package com.wei.vsclock.feature.times.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +21,10 @@ import com.wei.vsclock.core.designsystem.theme.shapes
 import com.wei.vsclock.feature.times.TimesUiState
 
 @Composable
-internal fun TimesGrid(timesUiStateList: List<TimesUiState>) {
+internal fun TimesGrid(
+    timesUiStateList: List<TimesUiState>,
+    onClickTimeCard: (String) -> Unit,
+) {
     LazyVerticalGrid(
         modifier = Modifier.padding(horizontal = SPACING_EXTRA_LARGE.dp),
         columns = GridCells.Adaptive(minSize = 128.dp),
@@ -28,7 +32,11 @@ internal fun TimesGrid(timesUiStateList: List<TimesUiState>) {
         verticalArrangement = Arrangement.spacedBy(SPACING_EXTRA_LARGE.dp),
     ) {
         items(timesUiStateList.size) { index ->
+            val timesUiState = timesUiStateList[index]
             TimeCard(
+                modifier = Modifier.clickable {
+                    onClickTimeCard(timesUiState.timeZone)
+                },
                 timesUiState = timesUiStateList[index],
             )
         }
@@ -36,10 +44,12 @@ internal fun TimesGrid(timesUiStateList: List<TimesUiState>) {
 }
 
 @Composable
-private fun TimeCard(
+internal fun TimeCard(
+    modifier: Modifier = Modifier,
     timesUiState: TimesUiState,
 ) {
     Card(
+        modifier = modifier,
         shape = shapes.extraSmall,
     ) {
         Column(

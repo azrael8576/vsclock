@@ -21,14 +21,15 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.wei.vsclock.core.AppLocale
+import com.wei.vsclock.core.data.model.RefreshRate
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
 import com.wei.vsclock.core.designsystem.theme.SPACING_LARGE
 import com.wei.vsclock.core.designsystem.theme.SPACING_SMALL
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
 import com.wei.vsclock.feature.times.HealthLoadingState
 import com.wei.vsclock.feature.times.R
-import com.wei.vsclock.feature.times.RefreshRate
 import com.wei.vsclock.feature.times.TimesViewState
+import java.util.concurrent.TimeUnit
 
 @Composable
 internal fun TimesHeader(
@@ -116,7 +117,9 @@ private fun SingleChoiceSegmentedButton(
                 ),
                 onClick = { onSelectRefreshRate(options[index]) },
                 selected = options[index] == selectedRefreshRate,
-                label = { Text(options[index].min.toString()) },
+                label = {
+                    Text(TimeUnit.SECONDS.toMinutes(options[index].second).toString())
+                },
             )
         }
     }

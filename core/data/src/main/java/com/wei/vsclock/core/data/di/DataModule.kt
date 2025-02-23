@@ -1,6 +1,8 @@
 package com.wei.vsclock.core.data.di
 
+import com.wei.vsclock.core.data.repository.DefaultRefreshStateRepository
 import com.wei.vsclock.core.data.repository.DefaultTimeRepository
+import com.wei.vsclock.core.data.repository.RefreshStateRepository
 import com.wei.vsclock.core.data.repository.TimeRepository
 import com.wei.vsclock.core.data.utils.ConnectivityManagerNetworkMonitor
 import com.wei.vsclock.core.data.utils.NetworkMonitor
@@ -16,6 +18,11 @@ abstract class DataModule {
     internal abstract fun bindsTimeRepository(
         timeRepository: DefaultTimeRepository,
     ): TimeRepository
+
+    @Binds
+    internal abstract fun bindsRefreshStateRepository(
+        refreshStateRepository: DefaultRefreshStateRepository,
+    ): RefreshStateRepository
 
     @Binds
     internal abstract fun bindsNetworkMonitor(networkMonitor: ConnectivityManagerNetworkMonitor): NetworkMonitor
