@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.window.layout.DisplayFeature
 import com.wei.vsclock.core.designsystem.ui.DeviceOrientation
+import com.wei.vsclock.feature.setting.navigation.settingGraph
 import com.wei.vsclock.feature.times.navigation.TIMES_ROUTE
 import com.wei.vsclock.feature.times.navigation.timesGraph
 import com.wei.vsclock.ui.VsclockAppState
@@ -34,6 +35,9 @@ fun VsclockNavHost(
         modifier = modifier,
     ) {
         timesGraph(
+            navController = navController,
+        )
+        settingGraph(
             navController = navController,
         )
     }

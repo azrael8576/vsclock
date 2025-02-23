@@ -35,5 +35,6 @@ include(":core:domain")
 include(":core:database")
 
 include(":feature:times")
+include(":feature:setting")
 
 include(":ui-test-hilt-manifest")

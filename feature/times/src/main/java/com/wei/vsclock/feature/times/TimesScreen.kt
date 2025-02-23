@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -104,16 +105,16 @@ internal fun TimesScreen(
         )
     }
 
-    val showSwitchLanguagePopup = remember { mutableStateOf(false) }
+    val showSwitchLanguageDialog = remember { mutableStateOf(false) }
 
-    if (showSwitchLanguagePopup.value) {
+    if (showSwitchLanguageDialog.value) {
         SwitchLanguageDialog(
             onDismissRequest = {
-                showSwitchLanguagePopup.value = false
+                showSwitchLanguageDialog.value = false
             },
             currentLocale = uiStates.currentLanguage,
             onConfirmation = { selectedLocale ->
-                showSwitchLanguagePopup.value = false
+                showSwitchLanguageDialog.value = false
                 if (selectedLocale == uiStates.currentLanguage) return@SwitchLanguageDialog
                 onSwitchLanguage(selectedLocale)
             },
@@ -133,7 +134,7 @@ internal fun TimesScreen(
 
             TimesHeader(
                 uiStates = uiStates,
-                onClickSwitchLanguageButton = { showSwitchLanguagePopup.value = true },
+                onClickSwitchLanguageButton = { showSwitchLanguageDialog.value = true },
                 onSelectRefreshRate = onSelectRefreshRate,
             )
 
@@ -144,6 +145,11 @@ internal fun TimesScreen(
             } else {
                 // PlaceHolder for LinearProgressIndicator
                 Spacer(modifier = Modifier.height(4.dp))
+                // TODO Wei: 待 [TimesViewModel] 移除 fakeTimeZones 移除此 UI
+                Text(
+                    text = "The data is fake.",
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
 
             TimesGrid(uiStates.timesUiStateList)
