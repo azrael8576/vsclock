@@ -5,5 +5,6 @@
     <string name="feature_times_ok">同意</string>
     <string name="feature_times_refresh_rate">更新頻率</string>
     <string name="feature_times_min">分</string>
+    <string name="feature_times_no_data">無資料</string>
 
 </resources>

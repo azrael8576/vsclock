@@ -222,6 +222,10 @@ internal fun SettingScreen(
                         isChecked = uiStates.selectedTimeZones.contains(timeZone),
                         onClick = {
                             if (headerUiMode == HeaderUiMode.EDIT) {
+                                if (uiStates.availableTimeZones.isEmpty()) {
+                                    onShowSnackBar(null, "Failed to find any IANA time zones.")
+                                    return@TimeZoneCard
+                                }
                                 selectedTimeZoneForEdit.value = timeZone
                                 showEditTimeZoneDialog.value = true
                             }

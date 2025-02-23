@@ -6,9 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface TimeRepository {
     suspend fun checkHealth(): Flow<Int>
 
-    suspend fun getCurrentTime(
-        timeZone: String,
-    ): Flow<CurrentTime>
+    suspend fun refreshCurrentTimes()
 
     suspend fun getAvailableTimeZones(): Flow<List<String>>
 

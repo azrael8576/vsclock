@@ -36,13 +36,15 @@ sealed interface TimesLoadingState {
 
 data class TimesUiState(
     val isSuccess: Boolean,
-    val time: String = "",
-    val timeZone: String = "",
+    val time: String,
+    val timeZone: String,
 ) : State
 
-fun CurrentTime.toTimesUiState(isSuccess: Boolean): TimesUiState =
+fun CurrentTime.toTimesUiState(
+    isSuccess: Boolean,
+): TimesUiState =
     TimesUiState(
         isSuccess = isSuccess,
-        time = this.time ?: "",
-        timeZone = this.timeZone ?: "",
+        time = this.time.ifEmpty { "--:--" },
+        timeZone = this.timeZone,
     )

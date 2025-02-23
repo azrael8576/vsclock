@@ -37,11 +37,7 @@ constructor(
 
     init {
         getAvailableTimezones()
-        viewModelScope.launch {
-            timeRepository.getCurrentTimes().collect {
-                updateState { copy(savedTimeZones = it.map { it.timeZone }) }
-            }
-        }
+        observeSavedTimeZones()
     }
 
     private fun getAvailableTimezones() {
@@ -77,6 +73,14 @@ constructor(
                     ),
                     availableTimeZones = result.data,
                 )
+            }
+        }
+    }
+
+    private fun observeSavedTimeZones() {
+        viewModelScope.launch {
+            timeRepository.getCurrentTimes().collect {
+                updateState { copy(savedTimeZones = it.map { it.timeZone }) }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.wei.vsclock.feature.times
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -19,6 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,6 +30,7 @@ import androidx.navigation.NavController
 import com.wei.vsclock.core.AppLocale
 import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
+import com.wei.vsclock.core.designsystem.theme.SPACING_SMALL
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
 import com.wei.vsclock.feature.times.ui.SwitchLanguageDialog
 import com.wei.vsclock.feature.times.ui.TimesGrid
@@ -145,18 +150,43 @@ internal fun TimesScreen(
             } else {
                 // PlaceHolder for LinearProgressIndicator
                 Spacer(modifier = Modifier.height(4.dp))
-                // TODO Wei: 待 [TimesViewModel] 移除 fakeTimeZones 移除此 UI
-                Text(
-                    text = "The data is fake.",
-                    color = MaterialTheme.colorScheme.error,
-                )
             }
 
-            TimesGrid(uiStates.timesUiStateList)
+            val timesUiStateList = uiStates.timesUiStateList
+            if (timesUiStateList.isNotEmpty()) {
+                TimesGrid(uiStates.timesUiStateList)
+            } else {
+                NoDataMessage()
+            }
 
             if (withBottomSpacer) {
                 Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
+        }
+    }
+}
+
+@Composable
+fun NoDataMessage() {
+    val noDataFound = stringResource(R.string.feature_times_no_data)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics {
+                contentDescription = noDataFound
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = "(´･ω･`)",
+                style = MaterialTheme.typography.displayMedium,
+            )
+            Spacer(modifier = Modifier.height(SPACING_SMALL.dp))
+            Text(
+                text = noDataFound,
+                style = MaterialTheme.typography.headlineMedium,
+            )
         }
     }
 }
