@@ -7,6 +7,8 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewModelScope
 import com.wei.vsclock.core.AppLocale
 import com.wei.vsclock.core.base.BaseViewModel
+import com.wei.vsclock.core.data.model.RefreshRate
+import com.wei.vsclock.core.data.repository.RefreshStateRepository
 import com.wei.vsclock.core.data.repository.TimeRepository
 import com.wei.vsclock.core.network.Dispatcher
 import com.wei.vsclock.core.network.VsclockDispatchers
@@ -22,6 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // 等 setApplicationLocales 套用後再更新狀態
@@ -32,6 +35,7 @@ class TimesViewModel
 @Inject constructor(
     @Dispatcher(VsclockDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val timeRepository: TimeRepository,
+    private val refreshStateRepository: RefreshStateRepository,
 ) : BaseViewModel<
     TimesViewAction,
     TimesViewState,
@@ -49,6 +53,7 @@ class TimesViewModel
         checkApiHealth()
         checkAppLanguage()
         observeSavedTimeZones()
+        observeRefreshState()
     }
 
     private fun checkApiHealth() {
@@ -100,9 +105,7 @@ class TimesViewModel
                 updateState {
                     copy(
                         timesUiStateList = savedCurrentTimes.map {
-                            it.toTimesUiState(
-                                isSuccess = false,
-                            )
+                            it.toTimesUiState()
                         },
                     )
                 }
@@ -110,6 +113,14 @@ class TimesViewModel
                     firstLoad.value = false
                     refreshCurrentTimes()
                 }
+            }
+        }
+    }
+
+    private fun observeRefreshState() {
+        viewModelScope.launch {
+            refreshStateRepository.refreshRate.collect { rate ->
+                updateState { copy(refreshRate = rate) }
             }
         }
     }
@@ -131,9 +142,9 @@ class TimesViewModel
             updateState {
                 copy(
                     timesLoadingState = TimesLoadingState.Loading,
-                    lastRefreshTime = currentTimeMillis,
                 )
             }
+            refreshStateRepository.updateLastRefreshTime(currentTimeMillis)
             scheduleNextRefresh()
             timeRepository.refreshCurrentTimes()
             updateState {
@@ -163,11 +174,7 @@ class TimesViewModel
      * 根據刷新頻率取得延遲毫秒數。
      */
     private fun getDelayMillis(refreshRate: RefreshRate): Long {
-        return when (refreshRate) {
-            RefreshRate.MIN_1 -> 60_000L
-            RefreshRate.MIN_5 -> 300_000L
-            RefreshRate.MIN_10 -> 600_000L
-        }
+        return TimeUnit.SECONDS.toMillis(refreshRate.second)
     }
 
     private fun onSwitchLanguage(appLocale: AppLocale) {
@@ -186,8 +193,19 @@ class TimesViewModel
      * 並利用新的頻率重新排程自動刷新。
      */
     private fun onSelectRefreshRate(refreshRate: RefreshRate) {
-        updateState { copy(refreshRate = refreshRate) }
+        refreshStateRepository.updateRefreshRate(refreshRate)
         refreshCurrentTimes()
+    }
+
+    private fun onClickTimeCard(timeZone: String) {
+        viewModelScope.launch {
+            refreshStateRepository.updateFloatingTime(timeZone)
+            updateState { copy(isTimeCardClicked = true) }
+        }
+    }
+
+    private fun onTimeCardClicked() {
+        updateState { copy(isTimeCardClicked = false) }
     }
 
     /**
@@ -203,6 +221,8 @@ class TimesViewModel
         when (action) {
             is TimesViewAction.SwitchLanguage -> onSwitchLanguage(action.appLocale)
             is TimesViewAction.SelectRefreshRate -> onSelectRefreshRate(action.refreshRate)
+            is TimesViewAction.ClickTimeCard -> onClickTimeCard(action.timeZone)
+            TimesViewAction.TimeCardClicked -> onTimeCardClicked()
         }
     }
 

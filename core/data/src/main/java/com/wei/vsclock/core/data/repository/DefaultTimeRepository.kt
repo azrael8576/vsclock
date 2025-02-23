@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -105,6 +106,36 @@ constructor(
         }
     }
 
+    override suspend fun refreshCurrentTime(timeZone: String) = withContext(ioDispatcher) {
+        // 取得 DB 中（快照）
+        val dbEntity =
+            currentTimeDao.getCurrentTimeEntityByTimeZone(timeZone).first() ?: return@withContext
+
+        // 呼叫 API 並加上重試機制
+        val networkResult = flow {
+            emit(network.getCurrentTime(dbEntity.timeZone))
+        }.asDataSourceResultWithRetry(
+            maxRetries = 3,
+            traceTag = "network.getCurrentTime: ${dbEntity.timeZone}",
+        ).first { it !is DataSourceResult.Loading }
+
+        when (networkResult) {
+            is DataSourceResult.Success -> {
+                // 轉換 API 回傳資料為 DB Entity，保留原有 id、timeZone 與 createdAt
+                val updatedEntity = networkResult.data.asEntity(
+                    id = dbEntity.id,
+                    timeZone = dbEntity.timeZone,
+                    createdAt = dbEntity.createdAt,
+                )
+
+                // 更新資料庫
+                currentTimeDao.updateCurrentTimeEntity(updatedEntity)
+            }
+            // API 呼叫失敗時不更新
+            else -> Timber.w("refreshCurrentTime failed for timeZone: ${dbEntity.timeZone}")
+        }
+    }
+
     override suspend fun getAvailableTimeZones(): Flow<List<String>> =
         withContext(ioDispatcher) {
             flow {
@@ -115,6 +146,9 @@ constructor(
     override suspend fun getCurrentTimes(): Flow<List<CurrentTime>> =
         currentTimeDao.getCurrentTimeEntities()
             .map { it.map(CurrentTimeEntity::asExternalModel) }
+
+    override suspend fun getCurrentTime(timeZone: String): Flow<CurrentTime?> =
+        currentTimeDao.getCurrentTimeEntityByTimeZone(timeZone).map { it?.asExternalModel() }
 
     override suspend fun addTimeZone(timeZone: String) =
         withContext(ioDispatcher) {
@@ -131,7 +165,8 @@ constructor(
 
     override suspend fun updateTimeZone(previousTimeZone: String, updatedTimeZone: String) =
         withContext(ioDispatcher) {
-            val existingEntity = currentTimeDao.getCurrentTimeEntityByTimeZone(previousTimeZone)
+            val existingEntity =
+                currentTimeDao.getCurrentTimeEntityByTimeZone(previousTimeZone).first()
             if (existingEntity != null) {
                 val updatedEntity = existingEntity.copy(
                     timeZone = updatedTimeZone,

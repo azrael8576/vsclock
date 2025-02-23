@@ -3,11 +3,14 @@ package com.wei.vsclock.feature.times
 import com.wei.vsclock.core.AppLocale
 import com.wei.vsclock.core.base.Action
 import com.wei.vsclock.core.base.State
+import com.wei.vsclock.core.data.model.RefreshRate
 import com.wei.vsclock.core.model.data.CurrentTime
 
 sealed class TimesViewAction : Action {
     data class SwitchLanguage(val appLocale: AppLocale) : TimesViewAction()
     data class SelectRefreshRate(val refreshRate: RefreshRate) : TimesViewAction()
+    data class ClickTimeCard(val timeZone: String) : TimesViewAction()
+    data object TimeCardClicked : TimesViewAction()
 }
 
 data class TimesViewState(
@@ -16,7 +19,7 @@ data class TimesViewState(
     val refreshRate: RefreshRate = RefreshRate.MIN_1,
     val timesLoadingState: TimesLoadingState = TimesLoadingState.Idle,
     val timesUiStateList: List<TimesUiState> = emptyList(),
-    val lastRefreshTime: Long? = null,
+    val isTimeCardClicked: Boolean = false,
 ) : State
 
 sealed interface HealthLoadingState {
@@ -35,16 +38,12 @@ sealed interface TimesLoadingState {
 }
 
 data class TimesUiState(
-    val isSuccess: Boolean,
     val time: String,
     val timeZone: String,
 ) : State
 
-fun CurrentTime.toTimesUiState(
-    isSuccess: Boolean,
-): TimesUiState =
+fun CurrentTime.toTimesUiState(): TimesUiState =
     TimesUiState(
-        isSuccess = isSuccess,
         time = this.time.ifEmpty { "--:--" },
         timeZone = this.timeZone,
     )

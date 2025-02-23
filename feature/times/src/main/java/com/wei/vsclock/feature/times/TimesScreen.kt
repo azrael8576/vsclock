@@ -1,5 +1,7 @@
 package com.wei.vsclock.feature.times
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -28,10 +31,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.wei.vsclock.core.AppLocale
+import com.wei.vsclock.core.data.model.RefreshRate
 import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
 import com.wei.vsclock.core.designsystem.theme.SPACING_SMALL
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
+import com.wei.vsclock.feature.times.service.FloatingTimeService
 import com.wei.vsclock.feature.times.ui.SwitchLanguageDialog
 import com.wei.vsclock.feature.times.ui.TimesGrid
 import com.wei.vsclock.feature.times.ui.TimesHeader
@@ -88,6 +93,19 @@ internal fun TimesRoute(
                 ),
             )
         },
+        onClickTimeCard = { timeZone ->
+            // TODO Wei: 檢查權限跳出 Dialog，提示使用者必須開啟懸浮權限
+            viewModel.dispatch(
+                TimesViewAction.ClickTimeCard(
+                    timeZone,
+                ),
+            )
+        },
+        onTimeCardClicked = {
+            viewModel.dispatch(
+                TimesViewAction.TimeCardClicked,
+            )
+        },
     )
 }
 
@@ -96,11 +114,15 @@ internal fun TimesScreen(
     uiStates: TimesViewState,
     onSwitchLanguage: (AppLocale) -> Unit,
     onSelectRefreshRate: (RefreshRate) -> Unit,
+    onClickTimeCard: (String) -> Unit,
+    onTimeCardClicked: () -> Unit,
     withTopSpacer: Boolean = true,
     withBottomSpacer: Boolean = true,
     isPreview: Boolean = false,
 ) {
     val showPopup = remember { mutableStateOf(false) }
+    val showSwitchLanguageDialog = remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     if (showPopup.value) {
         FunctionalityNotAvailablePopup(
@@ -109,8 +131,6 @@ internal fun TimesScreen(
             },
         )
     }
-
-    val showSwitchLanguageDialog = remember { mutableStateOf(false) }
 
     if (showSwitchLanguageDialog.value) {
         SwitchLanguageDialog(
@@ -126,6 +146,17 @@ internal fun TimesScreen(
         )
     }
 
+    if (uiStates.isTimeCardClicked) {
+        onTimeCardClicked()
+        context.startForegroundService(
+            Intent(
+                context,
+                FloatingTimeService::class.java,
+            ),
+        )
+        (context as? Activity)?.moveTaskToBack(true)
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
@@ -139,7 +170,9 @@ internal fun TimesScreen(
 
             TimesHeader(
                 uiStates = uiStates,
-                onClickSwitchLanguageButton = { showSwitchLanguageDialog.value = true },
+                onClickSwitchLanguageButton = {
+                    showSwitchLanguageDialog.value = true
+                },
                 onSelectRefreshRate = onSelectRefreshRate,
             )
 
@@ -154,7 +187,10 @@ internal fun TimesScreen(
 
             val timesUiStateList = uiStates.timesUiStateList
             if (timesUiStateList.isNotEmpty()) {
-                TimesGrid(uiStates.timesUiStateList)
+                TimesGrid(
+                    timesUiStateList = uiStates.timesUiStateList,
+                    onClickTimeCard = onClickTimeCard,
+                )
             } else {
                 NoDataMessage()
             }
@@ -199,6 +235,8 @@ fun TimesScreenPreview() {
             uiStates = TimesViewState(),
             onSwitchLanguage = {},
             onSelectRefreshRate = {},
+            onClickTimeCard = {},
+            onTimeCardClicked = {},
             isPreview = true,
         )
     }

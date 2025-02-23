@@ -1,10 +1,14 @@
 package com.wei.vsclock
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -18,6 +22,7 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.wei.vsclock.core.data.utils.NetworkMonitor
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
 import com.wei.vsclock.core.manager.SnackbarManager
+import com.wei.vsclock.feature.times.service.FloatingTimeService
 import com.wei.vsclock.ui.VsclockApp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -44,6 +49,12 @@ class MainActivity : AppCompatActivity() {
         // including IME animations, and go edge-to-edge
         // This also sets up the initial system bar style based on the platform theme
         enableEdgeToEdge()
+
+        // TODO Wei: 移動到 feature:time module
+        // 檢查是否已經有 SYSTEM_ALERT_WINDOW 權限
+        if (!Settings.canDrawOverlays(this)) {
+            requestOverlayPermission()
+        }
 
         setContent {
             val darkTheme = shouldUseDarkTheme()
@@ -84,6 +95,29 @@ class MainActivity : AppCompatActivity() {
             splashScreen.setKeepOnScreenCondition { false }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        stopService(Intent(this, FloatingTimeService::class.java))
+    }
+
+    private fun requestOverlayPermission() {
+        val intent = Intent(
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:$packageName"),
+        )
+        overlayPermissionLauncher.launch(intent)
+    }
+
+    private val overlayPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            lifecycleScope.launch {
+                delay(500) // 延遲以確保權限狀態更新
+                if (!Settings.canDrawOverlays(this@MainActivity)) {
+                    // TODO Wei: 提示使用者必須開啟懸浮權限
+                }
+            }
+        }
 }
 
 /**
