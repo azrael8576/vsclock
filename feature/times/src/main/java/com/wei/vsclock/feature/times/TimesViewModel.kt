@@ -97,7 +97,7 @@ class TimesViewModel
                     languageCode == AppLocale.ZH_HANT_TW.code -> AppLocale.ZH_HANT_TW
                     languageCode.startsWith("zh") -> AppLocale.ZH_HANT_TW // 任意 zh* 皆預設繁體
                     else -> AppLocale.EN
-                }
+                },
             )
         }
     }
