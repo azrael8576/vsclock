@@ -1,7 +1,6 @@
 # VsClock
 
-[![Android CI](https://github.com/azrael8576/vsclock/actions/workflows/Build.yml/badge.svg?branch=main)](https://github.com/azrael8576/vsclock/actions/workflows/Build.yml)  
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/azrael8576/vsclock/blob/main/LICENSE)
+[![Android CI](https://github.com/azrael8576/vsclock/actions/workflows/Build.yml/badge.svg?branch=main)](https://github.com/azrael8576/vsclock/actions/workflows/Build.yml)  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/azrael8576/vsclock/blob/main/LICENSE)
 
 "VsClock" 是一款基於 Single Activity MVI 架構並完全使用 Jetpack Compose UI 構建的多模組 Android 應用程式，並以本地資料庫做為資料源以絕大遵守 SSOT 原則。
 
@@ -103,7 +102,7 @@
 ## Modularization
 
 ## Types of modules in VsClock
-
+![image](https://github.com/azrael8576/vsclock/blob/main/docs/images/modularization-graph.drawio.png)
 **Top tip**：模組圖（如上所示）在模組化規劃期間有助於視覺化展示模組間的依賴性。
 
 VsClock 主要包含以下幾種模組:
