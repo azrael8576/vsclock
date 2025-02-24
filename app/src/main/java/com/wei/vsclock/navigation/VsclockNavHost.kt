@@ -36,6 +36,9 @@ fun VsclockNavHost(
     ) {
         timesGraph(
             navController = navController,
+            launchPermissionRequest = {
+                appState.showOverlayPermissionDialog.value = true
+            },
         )
         settingGraph(
             navController = navController,

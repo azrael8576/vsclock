@@ -1,7 +1,6 @@
 package com.wei.vsclock.core.data.repository
 
 import com.wei.vsclock.core.data.model.RefreshRate
-import com.wei.vsclock.core.database.dao.CurrentTimeDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

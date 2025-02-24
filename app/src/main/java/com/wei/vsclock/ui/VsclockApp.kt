@@ -1,6 +1,10 @@
 package com.wei.vsclock.ui
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -41,6 +45,7 @@ import androidx.window.layout.DisplayFeature
 import com.wei.vsclock.R
 import com.wei.vsclock.core.data.utils.NetworkMonitor
 import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
+import com.wei.vsclock.core.designsystem.component.OverlayPermissionDialog
 import com.wei.vsclock.core.designsystem.component.VsclockAppSnackbar
 import com.wei.vsclock.core.designsystem.component.VsclockBackground
 import com.wei.vsclock.core.designsystem.component.VsclockNavigationBar
@@ -69,6 +74,7 @@ fun VsclockApp(
     networkMonitor: NetworkMonitor,
     windowSizeClass: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
+    overlayPermissionLauncher: ActivityResultLauncher<Intent>,
     appState: VsclockAppState = rememberVsclockAppState(
         networkMonitor = networkMonitor,
         windowSizeClass = windowSizeClass,
@@ -87,6 +93,18 @@ fun VsclockApp(
         FunctionalityNotAvailablePopup(
             onDismiss = {
                 appState.showFunctionalityNotAvailablePopup.value = false
+            },
+        )
+    }
+
+    if (appState.showOverlayPermissionDialog.value) {
+        OverlayPermissionDialog(
+            onConfirmation = {
+                launchOverlayPermissionSetting(context, overlayPermissionLauncher)
+                appState.showOverlayPermissionDialog.value = false
+            },
+            onDismissRequest = {
+                appState.showOverlayPermissionDialog.value = false
             },
         )
     }
@@ -328,4 +346,15 @@ fun getMessageText(message: Message, context: Context): String {
                 .toTypedArray(),
         )
     }
+}
+
+private fun launchOverlayPermissionSetting(
+    context: Context,
+    overlayPermissionLauncher: ActivityResultLauncher<Intent>,
+) {
+    val intent = Intent(
+        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+        Uri.parse("package:${context.packageName}"),
+    )
+    overlayPermissionLauncher.launch(intent)
 }

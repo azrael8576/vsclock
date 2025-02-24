@@ -14,10 +14,12 @@ fun NavController.navigateToTimes(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.timesGraph(
     navController: NavController,
+    launchPermissionRequest: () -> Unit,
 ) {
     composable(route = TIMES_ROUTE) {
         TimesRoute(
             navController = navController,
+            launchPermissionRequest = launchPermissionRequest,
         )
     }
 }

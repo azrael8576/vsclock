@@ -7,5 +7,8 @@
     <string name="feature_times_min">分</string>
     <string name="feature_times_no_data">無資料</string>
     <string name="feature_times_oops_something_went_wrong_please_try_again">Oops！出了點問題。請重試。</string>
-
+    <string name="feature_times_dialog_floating_time_title">顯示浮動時鐘</string>
+    <string name="feature_times_dialog_floating_time_message">您想將該數位時鐘顯示為浮動視窗嗎？</string>
+    <string name="feature_times_dialog_floating_time_confirm">同意</string>
+    <string name="feature_times_dialog_floating_time_cancel">取消</string>
 </resources>
