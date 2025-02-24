@@ -35,6 +35,14 @@ fun <T> Flow<T>.asDataSourceResult(): Flow<DataSourceResult<T>> {
         .catch { emit(DataSourceResult.Error(it)) }
 }
 
+/**
+ * 與 asDataSourceResult 相似，但在遇到錯誤時可自動重試。
+ *
+ * @param maxRetries 最大重試次數，預設為 3。
+ * @param traceTag 日誌標籤，便於在重試或錯誤時紀錄。
+ *
+ * @return Flow<DataSourceResult<T>>
+ */
 fun <T> Flow<T>.asDataSourceResultWithRetry(
     maxRetries: Long = 3,
     traceTag: String,
