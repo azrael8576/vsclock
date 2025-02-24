@@ -7,6 +7,9 @@
 
 ## Screenshots
 
+<img src="https://github.com/azrael8576/vsclock/blob/main/docs/demo/demo.gif" alt="Demo">
+
+<img src="https://github.com/azrael8576/vsclock/blob/main/docs/demo/demo-split-screen.gif" alt="Demo-Split-Screen">
 
 ## Tech stack
 #### Architecture
