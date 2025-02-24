@@ -2,6 +2,7 @@ package com.wei.vsclock.feature.times
 
 import android.app.Activity
 import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,11 +33,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.wei.vsclock.core.AppLocale
 import com.wei.vsclock.core.data.model.RefreshRate
-import com.wei.vsclock.core.designsystem.component.FunctionalityNotAvailablePopup
 import com.wei.vsclock.core.designsystem.component.ThemePreviews
 import com.wei.vsclock.core.designsystem.theme.SPACING_SMALL
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
 import com.wei.vsclock.feature.times.service.FloatingTimeService
+import com.wei.vsclock.feature.times.ui.FloatingTimeConfirmationDialog
 import com.wei.vsclock.feature.times.ui.SwitchLanguageDialog
 import com.wei.vsclock.feature.times.ui.TimesGrid
 import com.wei.vsclock.feature.times.ui.TimesHeader
@@ -74,11 +75,27 @@ import com.wei.vsclock.feature.times.ui.TimesHeader
 internal fun TimesRoute(
     navController: NavController,
     viewModel: TimesViewModel = hiltViewModel(),
+    launchPermissionRequest: () -> Unit,
 ) {
     val uiStates: TimesViewState by viewModel.states.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    if (uiStates.isTimeCardClicked) {
+        viewModel.dispatch(
+            TimesViewAction.TimeCardClicked,
+        )
+        context.startForegroundService(
+            Intent(
+                context,
+                FloatingTimeService::class.java,
+            ),
+        )
+        (context as? Activity)?.moveTaskToBack(true)
+    }
 
     TimesScreen(
         uiStates = uiStates,
+        launchPermissionRequest = launchPermissionRequest,
         onSwitchLanguage = { appLocale ->
             viewModel.dispatch(
                 TimesViewAction.SwitchLanguage(
@@ -94,16 +111,10 @@ internal fun TimesRoute(
             )
         },
         onClickTimeCard = { timeZone ->
-            // TODO Wei: 檢查權限跳出 Dialog，提示使用者必須開啟懸浮權限
             viewModel.dispatch(
                 TimesViewAction.ClickTimeCard(
                     timeZone,
                 ),
-            )
-        },
-        onTimeCardClicked = {
-            viewModel.dispatch(
-                TimesViewAction.TimeCardClicked,
             )
         },
     )
@@ -112,25 +123,18 @@ internal fun TimesRoute(
 @Composable
 internal fun TimesScreen(
     uiStates: TimesViewState,
+    launchPermissionRequest: () -> Unit,
     onSwitchLanguage: (AppLocale) -> Unit,
     onSelectRefreshRate: (RefreshRate) -> Unit,
     onClickTimeCard: (String) -> Unit,
-    onTimeCardClicked: () -> Unit,
     withTopSpacer: Boolean = true,
     withBottomSpacer: Boolean = true,
     isPreview: Boolean = false,
 ) {
-    val showPopup = remember { mutableStateOf(false) }
     val showSwitchLanguageDialog = remember { mutableStateOf(false) }
+    val showFloatingTimeConfirmationDialog = remember { mutableStateOf(false) }
+    val clickedTimeCardTimeZone = remember { mutableStateOf("") }
     val context = LocalContext.current
-
-    if (showPopup.value) {
-        FunctionalityNotAvailablePopup(
-            onDismiss = {
-                showPopup.value = false
-            },
-        )
-    }
 
     if (showSwitchLanguageDialog.value) {
         SwitchLanguageDialog(
@@ -146,15 +150,20 @@ internal fun TimesScreen(
         )
     }
 
-    if (uiStates.isTimeCardClicked) {
-        onTimeCardClicked()
-        context.startForegroundService(
-            Intent(
-                context,
-                FloatingTimeService::class.java,
-            ),
+    if (showFloatingTimeConfirmationDialog.value) {
+        FloatingTimeConfirmationDialog(
+            onConfirmation = {
+                if (!Settings.canDrawOverlays(context)) {
+                    launchPermissionRequest()
+                } else {
+                    onClickTimeCard(clickedTimeCardTimeZone.value)
+                }
+                showFloatingTimeConfirmationDialog.value = false
+            },
+            onDismissRequest = {
+                showFloatingTimeConfirmationDialog.value = false
+            },
         )
-        (context as? Activity)?.moveTaskToBack(true)
     }
 
     Surface(
@@ -189,7 +198,10 @@ internal fun TimesScreen(
             if (timesUiStateList.isNotEmpty()) {
                 TimesGrid(
                     timesUiStateList = uiStates.timesUiStateList,
-                    onClickTimeCard = onClickTimeCard,
+                    onClickTimeCard = { timeZone ->
+                        clickedTimeCardTimeZone.value = timeZone
+                        showFloatingTimeConfirmationDialog.value = true
+                    },
                 )
             } else {
                 NoDataMessage()
@@ -233,10 +245,10 @@ fun TimesScreenPreview() {
     VsclockTheme {
         TimesScreen(
             uiStates = TimesViewState(),
+            launchPermissionRequest = {},
             onSwitchLanguage = {},
             onSelectRefreshRate = {},
             onClickTimeCard = {},
-            onTimeCardClicked = {},
             isPreview = true,
         )
     }

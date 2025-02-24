@@ -7,5 +7,8 @@
     <string name="feature_times_min">min</string>
     <string name="feature_times_no_data">No Data</string>
     <string name="feature_times_oops_something_went_wrong_please_try_again">Oops! Something went wrong. Please try again.</string>
-
+    <string name="feature_times_dialog_floating_time_title">Display floating clock</string>
+    <string name="feature_times_dialog_floating_time_message">Do you want to display this digital clock as a floating window?</string>
+    <string name="feature_times_dialog_floating_time_confirm">OK</string>
+    <string name="feature_times_dialog_floating_time_cancel">Cancel</string>
 </resources>

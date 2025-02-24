@@ -2,9 +2,7 @@ package com.wei.vsclock
 
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -42,6 +40,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
+        val overlayPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                lifecycleScope.launch {
+                    delay(500) // 延遲以確保權限狀態更新
+                }
+            }
 
         splashScreen.setKeepOnScreenCondition { true }
 
@@ -49,12 +53,6 @@ class MainActivity : AppCompatActivity() {
         // including IME animations, and go edge-to-edge
         // This also sets up the initial system bar style based on the platform theme
         enableEdgeToEdge()
-
-        // TODO Wei: 移動到 feature:time module
-        // 檢查是否已經有 SYSTEM_ALERT_WINDOW 權限
-        if (!Settings.canDrawOverlays(this)) {
-            requestOverlayPermission()
-        }
 
         setContent {
             val darkTheme = shouldUseDarkTheme()
@@ -84,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                         windowSizeClass = calculateWindowSizeClass(this@MainActivity),
                         displayFeatures = calculateDisplayFeatures(this@MainActivity),
                         snackbarManager = snackbarManager,
+                        overlayPermissionLauncher = overlayPermissionLauncher,
                     )
                 }
             }
@@ -100,24 +99,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         stopService(Intent(this, FloatingTimeService::class.java))
     }
-
-    private fun requestOverlayPermission() {
-        val intent = Intent(
-            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.parse("package:$packageName"),
-        )
-        overlayPermissionLauncher.launch(intent)
-    }
-
-    private val overlayPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            lifecycleScope.launch {
-                delay(500) // 延遲以確保權限狀態更新
-                if (!Settings.canDrawOverlays(this@MainActivity)) {
-                    // TODO Wei: 提示使用者必須開啟懸浮權限
-                }
-            }
-        }
 }
 
 /**

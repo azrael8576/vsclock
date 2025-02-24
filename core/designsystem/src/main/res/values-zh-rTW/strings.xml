@@ -2,4 +2,11 @@
 <resources>
     <string name="core_designsystem_close">CLOSE</string>
     <string name="core_designsystem_functionality_not_available">功能尚未上線 🙈</string>
+    <string name="core_designsystem_overlay_permission_dialog_title">允許懸浮視窗權限</string>
+    <string name="core_designsystem_overlay_permission_dialog_message">
+        若要顯示數位時鐘於其他應用程式之上，請前往「設定」並啟用此應用「在其他應用程式上層顯示」權限。\n\n
+        點選「前往設定」以開啟權限，或點選「取消」略過此步驟。
+    </string>
+    <string name="core_designsystem_overlay_permission_dialog_confirm">前往設定</string>
+    <string name="core_designsystem_overlay_permission_dialog_cancel">取消</string>
 </resources>

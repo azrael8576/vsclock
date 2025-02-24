@@ -207,4 +207,6 @@ class VsclockAppState(
             }
         }
     }
+
+    val showOverlayPermissionDialog: MutableState<Boolean> = mutableStateOf(false)
 }

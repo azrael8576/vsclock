@@ -2,4 +2,11 @@
 <resources>
     <string name="core_designsystem_close">CLOSE</string>
     <string name="core_designsystem_functionality_not_available">Functionality not available 🙈</string>
+    <string name="core_designsystem_overlay_permission_dialog_title">Allow Floating Window Permission</string>
+    <string name="core_designsystem_overlay_permission_dialog_message">
+        To display the digital clock over other apps, go to "Settings" and enable "Display over other apps" for this app.\n\n
+        Tap "Go to Settings" to enable the permission, or "Cancel" to skip this step.
+    </string>
+    <string name="core_designsystem_overlay_permission_dialog_confirm">Go to Settings</string>
+    <string name="core_designsystem_overlay_permission_dialog_cancel">Cancel</string>
 </resources>
