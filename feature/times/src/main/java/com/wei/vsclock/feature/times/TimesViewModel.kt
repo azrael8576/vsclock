@@ -1,5 +1,6 @@
 package com.wei.vsclock.feature.times
 
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -85,16 +86,18 @@ class TimesViewModel
     }
 
     private fun checkAppLanguage() {
+        val appLocale = AppCompatDelegate.getApplicationLocales().toLanguageTags()
+        val systemLocale = Resources.getSystem().configuration.locales[0]?.language ?: "en"
+        val languageCode = appLocale.ifEmpty { systemLocale }
+
         updateState {
             copy(
-                currentLanguage = when (
-                    AppCompatDelegate.getApplicationLocales()
-                        .toLanguageTags()
-                ) {
-                    AppLocale.EN.code -> AppLocale.EN
-                    AppLocale.ZH_HANT_TW.code -> AppLocale.ZH_HANT_TW
+                currentLanguage = when {
+                    languageCode == AppLocale.EN.code -> AppLocale.EN
+                    languageCode == AppLocale.ZH_HANT_TW.code -> AppLocale.ZH_HANT_TW
+                    languageCode.startsWith("zh") -> AppLocale.ZH_HANT_TW // 任意 zh* 皆預設繁體
                     else -> AppLocale.EN
-                },
+                }
             )
         }
     }

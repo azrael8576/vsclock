@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.wei.vsclock.core.designsystem.theme.SPACING_SMALL
 import com.wei.vsclock.core.model.data.CurrentTime
 import com.wei.vsclock.feature.times.R
-import com.wei.vsclock.feature.times.TimesUiState
+import com.wei.vsclock.feature.times.toTimesUiState
 import com.wei.vsclock.feature.times.ui.TimeCard
 
 @Composable
@@ -54,10 +54,7 @@ internal fun FloatingTimeCard(
         if (currentTime != null) {
             TimeCard(
                 modifier = Modifier.width(170.dp),
-                timesUiState = TimesUiState(
-                    time = currentTime.time,
-                    timeZone = currentTime.timeZone,
-                ),
+                timesUiState = currentTime.toTimesUiState(),
             )
         } else {
             NoDataMessage()
