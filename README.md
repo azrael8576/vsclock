@@ -1,9 +1,11 @@
 # VsClock
 
 [![Android CI](https://github.com/azrael8576/vsclock/actions/workflows/Build.yml/badge.svg?branch=main)](https://github.com/azrael8576/vsclock/actions/workflows/Build.yml)  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/azrael8576/vsclock/blob/main/LICENSE)
+「VsClock」是一款基於 Single Activity MVI 架構、完全使用 Jetpack Compose UI 實作的 懸浮時鐘 多模組 Android 應用程式。
 
-"VsClock" 是一款基於 Single Activity MVI 架構並完全使用 Jetpack Compose UI 構建的多模組 Android 應用程式，並以本地資料庫做為資料源以絕大遵守 SSOT 原則。
+支援 即時數位時鐘，可設為懸浮視窗並自訂更新頻率。
 
+透過 併發執行與自動重試機制 縮短等待時間並提升資料獲取成功率，並使用 本地資料庫（Room） 作為資料來源，確保 SSOT 原則，提供穩定流暢的使用體驗。
 
 ## Screenshots
 
