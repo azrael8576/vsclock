@@ -17,7 +17,7 @@ import androidx.window.layout.FoldingFeature
 import com.google.common.truth.Truth.assertThat
 import com.wei.vsclock.core.designsystem.ui.VsclockContentType
 import com.wei.vsclock.core.designsystem.ui.VsclockNavigationType
-import com.wei.vsclock.core.util.TestNetworkMonitor
+import com.wei.vsclock.core.testing.util.TestNetworkMonitor
 import com.wei.vsclock.utilities.COMPACT_HEIGHT
 import com.wei.vsclock.utilities.COMPACT_WIDTH
 import com.wei.vsclock.utilities.EXPANDED_HEIGHT

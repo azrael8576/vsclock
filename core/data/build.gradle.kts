@@ -21,5 +21,4 @@ dependencies {
 
     // Retrofit2
     implementation(libs.retrofit.core)
-    implementation(libs.kotlinx.datetime)
 }

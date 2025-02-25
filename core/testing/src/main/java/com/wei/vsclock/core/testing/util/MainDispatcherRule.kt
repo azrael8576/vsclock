@@ -1,4 +1,4 @@
-package com.wei.vsclock.core.util
+package com.wei.vsclock.core.testing.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

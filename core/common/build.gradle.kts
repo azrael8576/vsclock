@@ -13,6 +13,9 @@ android {
 }
 
 dependencies {
+    // Kotlinx datetime
+    api(libs.kotlinx.datetime)
+
     // LifeCycle
     implementation(libs.androidx.lifecycle.runtimeCompose)
     // Coroutines

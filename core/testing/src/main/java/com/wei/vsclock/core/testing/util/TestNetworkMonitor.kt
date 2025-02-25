@@ -1,4 +1,4 @@
-package com.wei.vsclock.core.util
+package com.wei.vsclock.core.testing.util
 
 import com.wei.vsclock.core.data.utils.NetworkMonitor
 import kotlinx.coroutines.flow.Flow

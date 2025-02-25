@@ -19,8 +19,8 @@ import com.wei.vsclock.core.designsystem.component.VsclockNavigationRail
 import com.wei.vsclock.core.designsystem.component.VsclockNavigationRailItem
 import com.wei.vsclock.core.designsystem.icon.VsclockIcons
 import com.wei.vsclock.core.designsystem.theme.VsclockTheme
-import com.wei.vsclock.core.util.DefaultRoborazziOptions
-import com.wei.vsclock.core.util.captureMultiTheme
+import com.wei.vsclock.core.testing.util.DefaultRoborazziOptions
+import com.wei.vsclock.core.testing.util.captureMultiTheme
 import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Rule
 import org.junit.Test

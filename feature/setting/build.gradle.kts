@@ -12,7 +12,6 @@ dependencies {
     implementation(projects.core.data)
 
     implementation(libs.androidx.appcompat)
-    implementation(libs.kotlinx.datetime)
 
     testImplementation(projects.core.testing)
 

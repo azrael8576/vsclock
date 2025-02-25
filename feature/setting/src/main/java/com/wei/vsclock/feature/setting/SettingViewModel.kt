@@ -6,16 +6,10 @@ import com.wei.vsclock.core.base.BaseViewModel
 import com.wei.vsclock.core.data.repository.TimeRepository
 import com.wei.vsclock.core.manager.SnackbarManager
 import com.wei.vsclock.core.manager.SnackbarState
-import com.wei.vsclock.core.network.Dispatcher
-import com.wei.vsclock.core.network.VsclockDispatchers
 import com.wei.vsclock.core.result.DataSourceResult
 import com.wei.vsclock.core.result.asDataSourceResultWithRetry
 import com.wei.vsclock.core.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,7 +18,6 @@ import javax.inject.Inject
 class SettingViewModel
 @Inject
 constructor(
-    @Dispatcher(VsclockDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val timeRepository: TimeRepository,
     private val snackbarManager: SnackbarManager,
 ) : BaseViewModel<
@@ -33,7 +26,6 @@ constructor(
     >(
     SettingViewState(),
 ) {
-    private var groupScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
     init {
         getAvailableTimezones()
@@ -218,13 +210,5 @@ constructor(
             is SettingViewAction.SelectTimeZoneCheckBox -> onSelectTimeZoneCheckBox(action.timeZone)
             is SettingViewAction.DeselectTimeZoneCheckBox -> onDeselectTimeZoneCheckBox(action.timeZone)
         }
-    }
-
-    /**
-     * 當 ViewModel 被清理時釋放資源。
-     */
-    override fun onCleared() {
-        super.onCleared()
-        groupScope.cancel()
     }
 }
