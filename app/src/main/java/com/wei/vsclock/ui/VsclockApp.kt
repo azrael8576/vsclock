@@ -74,7 +74,7 @@ fun VsclockApp(
     networkMonitor: NetworkMonitor,
     windowSizeClass: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    overlayPermissionLauncher: ActivityResultLauncher<Intent>,
+    overlayPermissionLauncher: ActivityResultLauncher<Intent>? = null,
     appState: VsclockAppState = rememberVsclockAppState(
         networkMonitor = networkMonitor,
         windowSizeClass = windowSizeClass,
@@ -100,7 +100,9 @@ fun VsclockApp(
     if (appState.showOverlayPermissionDialog.value) {
         OverlayPermissionDialog(
             onConfirmation = {
-                launchOverlayPermissionSetting(context, overlayPermissionLauncher)
+                overlayPermissionLauncher?.let {
+                    launchOverlayPermissionSetting(context, it)
+                }
                 appState.showOverlayPermissionDialog.value = false
             },
             onDismissRequest = {

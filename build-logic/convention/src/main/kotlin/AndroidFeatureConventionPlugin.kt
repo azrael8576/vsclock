@@ -17,7 +17,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 defaultConfig {
                     testInstrumentationRunner =
-                        "com.wei.vsclock.core.testing.VscTestRunner"
+                        "com.wei.vsclock.core.testing.VsclockTestRunner"
                 }
                 configureGradleManagedDevices(this)
             }
