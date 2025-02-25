@@ -85,8 +85,13 @@ private fun RefreshRateInfoRow(
         horizontalArrangement = Arrangement.spacedBy(SPACING_SMALL.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        val refreshRate = stringResource(id = R.string.feature_times_refresh_rate)
         Text(
-            text = stringResource(R.string.feature_times_refresh_rate),
+            modifier = Modifier.semantics {
+                // For UI test
+                contentDescription = refreshRate
+            },
+            text = refreshRate,
             style = MaterialTheme.typography.bodyLarge,
         )
         SingleChoiceSegmentedButton(
